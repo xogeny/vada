@@ -1,0 +1,20 @@
+{
+  "name": "ts-redux",
+  "version": "0.1.0",
+  "description": "A bunch of utilities for users of both TypeScript and redux",
+  "main": "js/index.js",
+  "scripts": {
+    "test": "tsc && npm mocha"
+  },
+  "keywords": [
+    "redux",
+    "typescript"
+  ],
+  "author": "Michael M. Tiller",
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "^3.10.1",
+    "redux": "^3.0.4",
+    "updeep": "^0.11.0"
+  }
+}
