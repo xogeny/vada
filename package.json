@@ -4,12 +4,13 @@
   "description": "A bunch of utilities for users of both TypeScript and redux",
   "main": "js/index.js",
   "scripts": {
-    "test": "tsc && npm mocha"
+    "test": "(cd tests; tsc && mocha js/tests)"
   },
   "keywords": [
     "redux",
     "typescript"
   ],
+  "typings": "js/index.d.ts",
   "author": "Michael M. Tiller",
   "license": "MIT",
   "dependencies": {

@@ -1,2 +1,5 @@
 node_modules
 js
+typings/chai
+typings/mocha
+typings/ts.d.ts
