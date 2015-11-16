@@ -15,5 +15,6 @@
         "noLib": false,
         "preserveConstEnums": true,
         "suppressImplicitAnyIndexErrors": true
-    }
+    },
+	"exclude": ["js"]
 }
