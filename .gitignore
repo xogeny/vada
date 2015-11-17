@@ -3,4 +3,5 @@ js
 typings/chai
 typings/mocha
 typings/lodash
+typings/react
 typings/ts.d.ts

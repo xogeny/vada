@@ -9,14 +9,6 @@ declare module Redux {
         type: string;
     }
     
-    // FSA-compliant action (from redux-actions.d.ts)
-    // See: https://github.com/acdlite/flux-standard-action
-    interface FluxStandardAction<P,M> extends Action {
-        payload?: P
-        error?: boolean
-        meta?: M
-    }
-
     // Not used...?
     interface ActionCreator extends Function {
         (...args: any[]): Action;
@@ -37,7 +29,7 @@ declare module Redux {
     // Dispatch is a function that takes an action of type A and
     // returns an instance of that same action (still of type A)
     interface Dispatch extends Function {
-        <A extends Action>(action: A): A;
+        <A extends Action>(action: A): any;
     }
 
     // MiddlewareArg is an instance of middleware that provides a

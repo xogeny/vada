@@ -2,8 +2,7 @@ import mocha = require("mocha");
 
 import { expect } from 'chai';
 
-import * as actions from '../src/actions';
-import * as state from '../src/state';
+import * as tsr from '../src';
 
 // This our state for this example
 interface CounterState {
@@ -12,14 +11,14 @@ interface CounterState {
 
 // These are some actions that we can create using the generate
 // action types provided in the actions module:
-var increment = actions.mapPath(["counter"], (x: number) => x+1)
-var decrement = actions.mapPath(["counter"], (x: number) => x-1)
-var reset = actions.setPath(["counter"], 0);
+var increment = tsr.mapPath(["counter"], (x: number) => x+1)
+var decrement = tsr.mapPath(["counter"], (x: number) => x-1)
+var reset = tsr.setPath(["counter"], 0);
 
 describe("Test a counter store", () => {
 	it("should process state changes for a counter", () => {
 		// Create the store
-		var store = state.updeepStore({counter: 0});
+		var store = tsr.updeepStore({counter: 0});
 
 		// Dispatch an increment
 		store.dispatch(increment);

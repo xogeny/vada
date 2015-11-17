@@ -1,5 +1,3 @@
-import redux = require('redux');
-
 // This is just a subset of the normal Store interface that doesn't
 // deal with dispatching, etc.
 export interface SimpleStore<T> {

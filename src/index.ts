@@ -1,1 +1,1 @@
-export { setPath, mapPath } from './actions';
+export { setPath, mapPath, updeepStore, updeepReducer } from './updeep';
