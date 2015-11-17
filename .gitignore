@@ -1,5 +1,5 @@
 node_modules
-js
+tests/js
 typings/chai
 typings/mocha
 typings/lodash
