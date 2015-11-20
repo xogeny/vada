@@ -27,7 +27,7 @@ export const UPDEEP_SET_PATH = 'UPDEEP_SET_PATH';
 
 // An action creator that creates an action that sets a given
 // element in an object hierarchy to a specified value
-export const setPath = (path: Path, v: any): PathAction => {
+export const setPath = <T>(path: Path, v: T): PathAction => {
 	return {
 		type: UPDEEP_SET_PATH,
 		payload: {

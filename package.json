@@ -2,7 +2,7 @@
   "name": "ts-redux",
   "version": "0.1.2",
   "description": "A bunch of utilities for users of both TypeScript and redux",
-  "main": "js/index.js",
+  "main": "./js/index.js",
   "scripts": {
     "prepublish": "(cd src; tsc)",
     "test": "(cd tests; tsc && mocha js/tests)"
