@@ -37,6 +37,22 @@ export const setPath = <T>(path: Path, v: T): PathAction => {
 	}
 }
 
+// An action creator that creates an action that overlays
+// data a portion of the state on top of the previous state.
+// For this action to be used, the overlay fragment has to
+// have the same type as the state.  This typically means
+// that many elements of the state need to be optional.
+// This is nearly analogous to the setPath action except
+// that a) it allows more fields to be set and b) it provides
+// greater type safety.
+export const UPDEEP_OVERLAY = 'UPDEEP_OVERLAY';
+export const overlay = <T>(partial: T): FSA<T,void> => {
+	return {
+		type: UPDEEP_OVERLAY,
+		payload: partial
+	}
+}
+
 // Constant used as the action type for the mapPath action
 export const UPDEEP_MAP_PATH = 'UPDEEP_MAP_PATH';
 
@@ -65,11 +81,14 @@ export function updeepReducer<T extends {}>(state0: T): Reducer<T> {
 			// Update the value in the hierarchy to a prescribed value
 			return updeep.updateIn(pa.payload.path, pa.payload.v, state);
 		case UPDEEP_MAP_PATH:
-			let ma = action as MapAction<T>;
+			let ma = action as MapAction<any>;
 			// Get the current value of the specified element
 			let cur = get(ma.payload.path, state)
 			// Update it's value to the result of applying the provided function
 			return updeep.updateIn(ma.payload.path, ma.payload.f(cur), state);
+		case UPDEEP_OVERLAY:
+			let oa = action as FSA<{},any>;
+			return updeep(oa.payload, state);
 		default:
 			return state;
 		}
