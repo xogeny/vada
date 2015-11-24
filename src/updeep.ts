@@ -14,13 +14,13 @@ export interface SetPathPayload {
 }
 
 // The MapPathPayload type is used by the mapPath action
-export interface MapPathPayload<T,R> {
+export interface MapPathPayload<T> {
 	path: Path;     // member reference
-	f: (v: T) => R; // function to apply to that member
+	f: (v: T) => T; // function to apply to that member
 }
 
 export type PathAction = FSA<SetPathPayload, void>;
-export type MapAction<T,R> = FSA<MapPathPayload<T,R>, void>;
+export type MapAction<T> = FSA<MapPathPayload<T>, void>;
 
 // Constant used as the action type for the setPath action
 export const UPDEEP_SET_PATH = 'UPDEEP_SET_PATH';
@@ -42,7 +42,7 @@ export const UPDEEP_MAP_PATH = 'UPDEEP_MAP_PATH';
 
 // An action creator that creates an action that applies the provided
 // function to the value of a specified element in an object hierarchy
-export const mapPath = <T,R>(path: Path, f: (v: T) => R): MapAction<T,R> => {
+export const mapPath = <T>(path: Path, f: (v: T) => T): MapAction<T> => {
 	return {
 		type: UPDEEP_MAP_PATH,
 		payload: {
@@ -65,7 +65,7 @@ export function updeepReducer<T extends {}>(state0: T): Reducer<T> {
 			// Update the value in the hierarchy to a prescribed value
 			return updeep.updateIn(pa.payload.path, pa.payload.v, state);
 		case UPDEEP_MAP_PATH:
-			let ma = action as MapAction<T,any>;
+			let ma = action as MapAction<T>;
 			// Get the current value of the specified element
 			let cur = get(ma.payload.path, state)
 			// Update it's value to the result of applying the provided function

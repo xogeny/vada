@@ -16,11 +16,12 @@
   "license": "MIT",
   "dependencies": {
     "lodash": "^3.10.1",
-    "react": "^0.13.3",
+    "react": "^0.14.3",
     "redux": "^3.0.4",
     "updeep": "^0.11.0"
   },
   "devDependencies": {
-    "chai": "^3.4.1"
+    "chai": "^3.4.1",
+    "redux-devtools": "^2.1.5"
   }
 }

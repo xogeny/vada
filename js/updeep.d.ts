@@ -5,15 +5,15 @@ export interface SetPathPayload {
     path: Path;
     v: any;
 }
-export interface MapPathPayload<T, R> {
+export interface MapPathPayload<T> {
     path: Path;
-    f: (v: T) => R;
+    f: (v: T) => T;
 }
 export declare type PathAction = FSA<SetPathPayload, void>;
-export declare type MapAction<T, R> = FSA<MapPathPayload<T, R>, void>;
+export declare type MapAction<T> = FSA<MapPathPayload<T>, void>;
 export declare const UPDEEP_SET_PATH: string;
 export declare const setPath: <T>(path: (string | number)[], v: T) => FSA<SetPathPayload, void>;
 export declare const UPDEEP_MAP_PATH: string;
-export declare const mapPath: <T, R>(path: (string | number)[], f: (v: T) => R) => FSA<MapPathPayload<T, R>, void>;
+export declare const mapPath: <T>(path: (string | number)[], f: (v: T) => T) => FSA<MapPathPayload<T>, void>;
 export declare function updeepReducer<T extends {}>(state0: T): Reducer<T>;
 export declare function updeepStore<T extends {}>(state0: T): Store<T>;

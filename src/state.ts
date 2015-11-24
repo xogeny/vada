@@ -13,7 +13,6 @@ export interface SimpleStore<T> {
 // total application state.
 export class SubStore<P,C> implements SimpleStore<C> {
 	constructor(protected store: SimpleStore<P>, protected smap: (s: P) => C) {
-
 	}
 	getState(): C {
 		var parentState: P = this.store.getState();
