@@ -22,6 +22,8 @@
   },
   "devDependencies": {
     "chai": "^3.4.1",
-    "redux-devtools": "^2.1.5"
+    "redux-devtools": "^2.1.5",
+    "ts-node": "^0.5.4",
+    "typescript": "^1.6.2"
   }
 }

@@ -11,6 +11,13 @@ exports.setPath = function (path, v) {
         }
     };
 };
+exports.UPDEEP_OVERLAY = 'UPDEEP_OVERLAY';
+exports.overlay = function (partial) {
+    return {
+        type: exports.UPDEEP_OVERLAY,
+        payload: partial
+    };
+};
 exports.UPDEEP_MAP_PATH = 'UPDEEP_MAP_PATH';
 exports.mapPath = function (path, f) {
     return {
@@ -32,6 +39,9 @@ function updeepReducer(state0) {
                 var ma = action;
                 var cur = access_1.get(ma.payload.path, state);
                 return updeep.updateIn(ma.payload.path, ma.payload.f(cur), state);
+            case exports.UPDEEP_OVERLAY:
+                var oa = action;
+                return updeep(oa.payload, state);
             default:
                 return state;
         }
