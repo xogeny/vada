@@ -1,4 +1,4 @@
-export { setPath, mapPath, updeepStore, updeepReducer, overlay } from './updeep';
+export { setPath, mapPath, applyAt, updeepStore, updeepReducer, overlay } from './updeep';
 
 export { bindClass } from './connect';
 
