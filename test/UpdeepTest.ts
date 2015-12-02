@@ -47,9 +47,10 @@ describe("Test updeep actions", () => {
 		expect(store.getState().bottles.howMany).to.equal(98);
 	})
 	it("should handle arrays as well", () => {
-		var store = tsr.updeepStore<Concurrent>({
+		var s0: Concurrent = {
 			bottles: [{howMany: 50, passedAround: true}, {howMany: 99, passedAround: false}]
-		});
+		}
+		var store = tsr.updeepStore<Concurrent>(s0);
 
 		// This shows how we can generate new actions that apply an existing action
 		// but at a different part of the hierarchy.

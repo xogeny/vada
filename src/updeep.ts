@@ -86,6 +86,7 @@ export function applyAt<T extends PathPayload>(path: Path, action: PathAction<T>
 // This type of reducer responds to the following actions:
 //    - UPDEEP_SET_PATH: Set a given element to a specified value
 //    - UPDEEP_MAP_PATH: Apply the specified function an the value of the given element
+//    - UPDEEP_OVERLAY: Apply an overlay to a given value
 export function updeepReducer<T extends {}>(state0: T): Reducer<T> {
 	return function red(state: T = state0, action: Action) {
 		switch (action.type) {
