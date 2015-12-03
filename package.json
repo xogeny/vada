@@ -4,8 +4,8 @@
   "description": "A bunch of utilities for users of both TypeScript and redux",
   "main": "./js/index.js",
   "scripts": {
-    "prepublish": "(cd src; tsc)",
-    "test": "(cd tests; tsc && mocha js/tests)"
+    "prepublish": "tsc",
+    "test": "mocha"
   },
   "keywords": [
     "redux",
