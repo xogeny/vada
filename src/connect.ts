@@ -13,11 +13,12 @@ import { SimpleStore } from './state';
 // they will get updated whenever the store value changes.
 export function bindClass<P,S>(store: SimpleStore<S>,
 							   elem: React.ComponentClass<P>,
-							   pmap: (s: S) => P)
+							   pmap: (s: S) => P, debug?: string)
 : React.ClassicComponentClass<{}> {
 	// A variable that will hold the value of our unsubscribe function once
 	// the component is mounted.
 	var unsub: () => void = null;
+	var mounted: boolean = false;
 
 	// This creates a new ClassicComponentClass that renders the Component passed
 	// in but also takes care of binding properties.
@@ -31,17 +32,33 @@ export function bindClass<P,S>(store: SimpleStore<S>,
 		componentWillUnmount() {
 			// If the component gets unmounted, unsubscribe from the
 			// store.
+			mounted = false;
+			if (debug) {
+				console.log("Unmounting bind class ", debug)
+			}
 			if (unsub!=null) {
+				if (debug) {
+					console.log("  Unsubscribing bind class ", debug)
+				}
 				unsub();
 			}
 		},
 		componentDidMount() {
+			if (debug) {
+				console.log("Mounting bind class ", debug)
+			}
+			mounted = true;
 			// Subscribe to the store and record the unsubscribe function
 			unsub = store.subscribe(() => {
 				// Set the state.  Note that something must be binding
 				// 'this' to the right thing when the spec is turned into
 				// an actual component.
-				this.setState(store.getState());
+				if (debug) {
+					console.log("  Store update caught for ", debug)
+				}
+				if (mounted) {
+					this.setState(store.getState());
+				}
 			});
 			this.setState(store.getState());
 		},
