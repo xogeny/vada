@@ -13,36 +13,27 @@ interface BottlesOfBeerOnTheWall {
 // A name to give to the specific action
 const TAKE_ONE = 'Bottles/TAKE_ONE';
 
-var beer = tsr.DefineAction("TAKE_ONE", (p: void) => null, (s: BottlesOfBeerOnTheWall, a: tsr.EvalAction<void>) => {
-  return {
-    howMany: s.howMany-1,
-    passedAround: true,
-  }
-})
-
-// Here is the action where we indicate we want to see a state transformation
-//const requestOne: tsr.EvalAction<void> = { type: TAKE_ONE, payload: null }
-// Here is the actual code for the transformation
-//const takeOneDown = (s: BottlesOfBeerOnTheWall, take: tsr.EvalAction<void>): BottlesOfBeerOnTheWall => {
-//  return {
-//    howMany: s.howMany-1,
-//    passedAround: true,
-//  }
-//}
+var beer: tsr.ActionInfo<BottlesOfBeerOnTheWall,void> =
+  tsr.DefineAction<BottlesOfBeerOnTheWall,void>("Bottles/TAKE_ONE",
+    (s: BottlesOfBeerOnTheWall, p: void) => {
+      return {
+        howMany: s.howMany-1,
+        passedAround: true,
+      }
+    })
 
 interface MaidsAMilking {
 	howMany: number;
 	cows: number;
 }
 
-const ADD_MAID = 'Maids/ADD_MAID';
-const requestMaid: tsr.EvalAction<void> = { type: ADD_MAID, payload: null }
-const addMaid = (s: MaidsAMilking, add: tsr.EvalAction<void>): MaidsAMilking => {
-  return {
-      howMany: s.howMany+1,
-      cows: s.cows
-  }
-}
+var milk = tsr.DefineAction<MaidsAMilking,void>("Maids/ADD_MAID",
+  (s: MaidsAMilking, p: void) => {
+    return {
+        howMany: s.howMany+1,
+        cows: s.cows
+    }
+  })
 
 interface Combined {
 	bottles: BottlesOfBeerOnTheWall;
@@ -77,12 +68,8 @@ describe("Test eval actions", () => {
 			cows: 14
 		};
 
-    var bred = tsr.EvalReducer(b0, {
-      [beer.id]: beer.evaluate
-    })
-    var mred = tsr.EvalReducer(m0, {
-      [ADD_MAID]: addMaid
-    })
+    var bred = tsr.EvalReducer(b0, [beer])
+    var mred = tsr.EvalReducer(m0, [milk])
     var store = redux.createStore(CombinedReducer(bred, mred))
 
 		store.dispatch(beer.create(null));
@@ -90,7 +77,7 @@ describe("Test eval actions", () => {
 		expect(store.getState().bottles.howMany).to.equal(98);
     expect(store.getState().maids.howMany).to.equal(7);
 
-    store.dispatch(requestMaid);
+    store.dispatch(milk.create(null));
 
     expect(store.getState().bottles.howMany).to.equal(98);
     expect(store.getState().maids.howMany).to.equal(8);
