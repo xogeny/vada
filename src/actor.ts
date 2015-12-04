@@ -16,11 +16,19 @@ export type Actor<T> = (state: T, dispatch: redux.Dispatch) => void;
 // all the actors to react to store changes.
 export function Subscribe<T>(store: redux.Store<T>, actors: Array<Actor<T>>) {
 	var acting = false;
-	store.subscribe(() => {
+
+  // Run all actors
+  var process = () => {
 		if (!acting) {
 			acting = true;
 			actors.forEach((actor: Actor<T>) => { actor(store.getState(), store.dispatch) });
 			acting = false;
 		}
-	})
+	}
+
+  // Run 'process' whenever the state is update
+	store.subscribe(process);
+
+  // First these actors for the current state of the store as well.
+  process();
 }
