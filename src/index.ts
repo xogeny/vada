@@ -2,7 +2,7 @@ export { setPath, mapPath, applyAt, updeepStore, updeepReducer, overlay } from '
 
 export { Actor, Subscribe } from './actor';
 
-export { EvalAction, EvaluatorMap, Evaluator, EvalReducer } from './eval';
+export { EvalAction, EvaluatorMap, Evaluator, EvalReducer, DefineAction } from './eval';
 
 export { bindClass } from './connect';
 

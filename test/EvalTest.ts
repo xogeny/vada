@@ -10,20 +10,38 @@ interface BottlesOfBeerOnTheWall {
 	passedAround: boolean;
 }
 
-const TAKE_ONE = 'TAKE_ONE';
+// A name to give to the specific action
+const TAKE_ONE = 'Bottles/TAKE_ONE';
 
-const takeAction: tsr.EvalAction<void> = { type: TAKE_ONE, payload: null }
-const takeOneDown = (s: BottlesOfBeerOnTheWall, take: tsr.EvalAction<void>): BottlesOfBeerOnTheWall => {
-  console.log("Taking down from ", s);
+var beer = tsr.DefineAction("TAKE_ONE", (p: void) => null, (s: BottlesOfBeerOnTheWall, a: tsr.EvalAction<void>) => {
   return {
     howMany: s.howMany-1,
     passedAround: true,
   }
-}
+})
+
+// Here is the action where we indicate we want to see a state transformation
+//const requestOne: tsr.EvalAction<void> = { type: TAKE_ONE, payload: null }
+// Here is the actual code for the transformation
+//const takeOneDown = (s: BottlesOfBeerOnTheWall, take: tsr.EvalAction<void>): BottlesOfBeerOnTheWall => {
+//  return {
+//    howMany: s.howMany-1,
+//    passedAround: true,
+//  }
+//}
 
 interface MaidsAMilking {
 	howMany: number;
 	cows: number;
+}
+
+const ADD_MAID = 'Maids/ADD_MAID';
+const requestMaid: tsr.EvalAction<void> = { type: ADD_MAID, payload: null }
+const addMaid = (s: MaidsAMilking, add: tsr.EvalAction<void>): MaidsAMilking => {
+  return {
+      howMany: s.howMany+1,
+      cows: s.cows
+  }
 }
 
 interface Combined {
@@ -60,43 +78,30 @@ describe("Test eval actions", () => {
 		};
 
     var bred = tsr.EvalReducer(b0, {
-      [TAKE_ONE]: takeOneDown
+      [beer.id]: beer.evaluate
     })
-    var mred = tsr.EvalReducer(m0, {})
+    var mred = tsr.EvalReducer(m0, {
+      [ADD_MAID]: addMaid
+    })
     var store = redux.createStore(CombinedReducer(bred, mred))
 
-		store.dispatch(takeAction);
+		store.dispatch(beer.create(null));
 
 		expect(store.getState().bottles.howMany).to.equal(98);
+    expect(store.getState().maids.howMany).to.equal(7);
+
+    store.dispatch(requestMaid);
+
+    expect(store.getState().bottles.howMany).to.equal(98);
+    expect(store.getState().maids.howMany).to.equal(8);
 	})
-  /*
-	it("should handle arrays as well", () => {
-		var s0: Concurrent = {
-			bottles: [{howMany: 50, passedAround: true}, {howMany: 99, passedAround: false}]
-		}
-		var store = tsr.updeepStore<Concurrent>(s0);
-
-		// This shows how we can generate new actions that apply an existing action
-		// but at a different part of the hierarchy.
-		var play = (which: number) => tsr.applyAt(["bottles", which], takeOneDown)
-
-		expect(store.getState().bottles[0].howMany).to.equal(50);
-		expect(store.getState().bottles[1].howMany).to.equal(99);
-
-		store.dispatch(play(1));
-
-		expect(store.getState().bottles[0].howMany).to.equal(50);
-		expect(store.getState().bottles[1].howMany).to.equal(98);
-
-		store.dispatch(play(1));
-
-		expect(store.getState().bottles[0].howMany).to.equal(50);
-		expect(store.getState().bottles[1].howMany).to.equal(97);
-
-		store.dispatch(play(0));
-
-		expect(store.getState().bottles[0].howMany).to.equal(49);
-		expect(store.getState().bottles[1].howMany).to.equal(97);
-	});
-  */
+  // I used to have an array based version here.  But in looking at
+  // Abramov's Redux videos, he doesn't reuse actions between scalar and
+  // vector types.  Instead, he defines different actions for those cases.
+  // The key thing is that the actor can determine by looking at the state
+  // if it applies to that state.  In other words, each element in an
+  // array should have some kind of index/id associated with it so the
+  // reducer/action know if they should do anything to that element.  They
+  // have no notion of the container context.  As such, I'm not going to
+  // worry about this functionality for now.
 })

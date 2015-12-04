@@ -4,6 +4,14 @@ export interface EvalAction<P> extends redux.Action {
 	payload: P;
 }
 
+export function DefineAction<T,P>(id: string, create: (p: P) => EvalAction<P>, evaluate: (s: T, a: EvalAction<P>) => T) {
+  return {
+    id: id,
+    create: (p: P) => { return { type: id, payload: create(p) } },
+    evaluate: evaluate,
+  }
+}
+
 export type EvaluatorMap<T> = { [key: string]: Evaluator<T,any> }
 export type Evaluator<T,P> = (s: T, payload: P) => T;
 
