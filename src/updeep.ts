@@ -81,6 +81,22 @@ export function applyAt<T extends PathPayload>(path: Path, action: PathAction<T>
 	return updeep({payload: { path: newpath}}, action);
 }
 
+export interface UpdeepAction<T> {
+	(s: T, action: Action): T;
+}
+
+export type ActionMap<T> = { [key: string]: UpdeepAction<T> };
+
+export function updeepReducer2<T extends {}>(state0: T, actions: ActionMap<T>): Reducer<T> {
+	return function red(state: T = state0, action: Action) {
+		var act = actions[action.type];
+		if (act) {
+			return act(state, action);
+		}
+		return state;
+	}
+}
+
 // This function produces a reducer that manages an object of the specified
 // type, T.  To create the reducer, an initial state value must be provided.
 // This type of reducer responds to the following actions:
