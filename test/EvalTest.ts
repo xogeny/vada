@@ -10,11 +10,7 @@ interface BottlesOfBeerOnTheWall {
 	passedAround: boolean;
 }
 
-// A name to give to the specific action
-const TAKE_ONE = 'Bottles/TAKE_ONE';
-
-var beer: tsr.ActionInfo<BottlesOfBeerOnTheWall,void> =
-  tsr.DefineAction<BottlesOfBeerOnTheWall,void>("Bottles/TAKE_ONE",
+var beer = tsr.DefOp("Bottles/TAKE_ONE",
     (s: BottlesOfBeerOnTheWall, p: void) => {
       return {
         howMany: s.howMany-1,
@@ -27,7 +23,7 @@ interface MaidsAMilking {
 	cows: number;
 }
 
-var milk = tsr.DefineAction<MaidsAMilking,void>("Maids/ADD_MAID",
+var milk = tsr.DefOp("Maids/ADD_MAID",
   (s: MaidsAMilking, p: void) => {
     return {
         howMany: s.howMany+1,
@@ -49,13 +45,6 @@ function CombinedReducer(bred: redux.Reducer<BottlesOfBeerOnTheWall>,
       }
     }
   }
-// An action re-targeted so it can be applied to an an instance
-// Combined
-//const takeOneDown2 = tsr.applyAt(["bottles"], takeOneDown)
-
-interface Concurrent {
-	bottles: Array<BottlesOfBeerOnTheWall>;
-}
 
 describe("Test eval actions", () => {
 	it("should update different reducers independently when combined", () => {
@@ -68,16 +57,17 @@ describe("Test eval actions", () => {
 			cows: 14
 		};
 
-    var bred = tsr.EvalReducer(b0, [beer])
-    var mred = tsr.EvalReducer(m0, [milk])
+    var bred = tsr.OpReducer(b0, [beer])
+    var mred = tsr.OpReducer(m0, [milk])
     var store = redux.createStore(CombinedReducer(bred, mred))
 
-		store.dispatch(beer.create(null));
+    console.log("beer.type = ", beer.type)
+		store.dispatch(beer.request(null));
 
 		expect(store.getState().bottles.howMany).to.equal(98);
     expect(store.getState().maids.howMany).to.equal(7);
 
-    store.dispatch(milk.create(null));
+    store.dispatch(milk.request(null));
 
     expect(store.getState().bottles.howMany).to.equal(98);
     expect(store.getState().maids.howMany).to.equal(8);
