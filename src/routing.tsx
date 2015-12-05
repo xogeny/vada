@@ -1,3 +1,5 @@
+/// <reference path="../typings/crossroads/crossroads.d.ts"/>
+
 import React = require('react');
 import redux = require('redux');
 
@@ -34,15 +36,16 @@ export function paramObj(route: CrossroadsJs.RouteData): { [key: string]: any } 
 }
 
 export function addRoutes(routes: RouteList) {
-    for (var k in routes) {
-        var route = addRoute(routes[k]);
-        routeMap[k] = route;
-        reverseMap[routes[k]] = k;
+    for (var name in routes) {
+      var pattern = routes[name];
+      var route = addRoute(name, pattern);
     }
 }
 
-export function addRoute(pattern: string) {
+export function addRoute(name: string, pattern: string) {
     var ret = crossroads.addRoute(pattern);
+    routeMap[name] = ret;
+    reverseMap[pattern] = name;
     return ret;
 }
 

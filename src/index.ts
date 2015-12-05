@@ -2,7 +2,7 @@ export { setPath, mapPath, applyAt, updeepStore, updeepReducer, overlay } from '
 
 export { Reactor, Subscribe } from './reactors';
 
-export { initializeRouting, paramObj, addRoutes, href,
+export { initializeRouting, paramObj, addRoutes, addRoute, href,
          RouteState, setRoute, routeReducer, Route,
          Provider, initialRouteState } from './routing';
 
