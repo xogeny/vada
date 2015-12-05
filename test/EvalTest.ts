@@ -61,7 +61,6 @@ describe("Test eval actions", () => {
     var mred = tsr.OpReducer(m0, [milk])
     var store = redux.createStore(CombinedReducer(bred, mred))
 
-    console.log("beer.type = ", beer.type)
 		store.dispatch(beer.request(null));
 
 		expect(store.getState().bottles.howMany).to.equal(98);

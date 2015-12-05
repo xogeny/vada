@@ -6,3 +6,6 @@
 /// <reference path="node/node.d.ts" />
 /// <reference path="node-uuid/node-uuid-base.d.ts" />
 /// <reference path="node-uuid/node-uuid-cjs.d.ts" />
+/// <reference path="hasher/hasher.d.ts" />
+/// <reference path="crossroads/crossroads.d.ts" />
+/// <reference path="js-signals/js-signals.d.ts" />
