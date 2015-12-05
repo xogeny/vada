@@ -4,7 +4,8 @@ import redux = require('redux');
 import crossroads = require('crossroads');
 import hasher = require('hasher');
 
-import { DefOp, OpReducer, Operation } from '../src';
+import { DefOp, OpReducer, Operation } from './ops';
+import { SimpleStore } from './store';
 
 export type RouteList = { [key: string]: string }
 var routeMap: { [key: string]: CrossroadsJs.Route } = {};
@@ -67,21 +68,32 @@ export const setRoute = DefOp("Route/SET_ROUTE", (r: RouteState, p: RouteState) 
 	}
 })
 
-export const routeReducer = OpReducer({ name: "", params: {}}, [setRoute])
+export const initialRouteState = {
+  name: "",
+  params: {}
+}
 
-// Stuff related to routing components and context
-export function MakeProvider(store: redux.Store<any>) {
-    return React.createClass({
-        childContextTypes: {
-            store: React.PropTypes.any
-        },
-        getChildContext: function() {
-            return { store: store };
-        },
-        render: function() {
-            return <div>{this.props.children}</div>;
-        }
-    });
+export const routeReducer = OpReducer(initialRouteState, [setRoute])
+
+export interface ProviderProps extends React.Props<void> {
+  store: redux.Store<any>;
+  routeStore: SimpleStore<RouteState>;
+}
+
+export class Provider extends React.Component<ProviderProps,void> {
+  static childContextTypes = {
+      store: React.PropTypes.any,
+      routeStore: React.PropTypes.any
+  }
+  getChildContext() {
+      return {
+        store: this.props.store,
+        routeStore: this.props.routeStore
+      };
+  }
+  render() {
+      return <div>{this.props.children}</div>;
+  }
 }
 
 export interface RouteProps extends React.Props<void>{
@@ -95,7 +107,7 @@ export interface RouteVisibilityState {
 export class Route extends React.Component<RouteProps, RouteVisibilityState> {
 	public unsub: () => void;
 	static contextTypes = {
-    store: React.PropTypes.any,
+    routeStore: React.PropTypes.any,
   }
 	constructor(props?: RouteProps) {
 		super(props);
@@ -117,12 +129,13 @@ export class Route extends React.Component<RouteProps, RouteVisibilityState> {
 			var name = s.name;
 			var visible = name == this.props.name;
 			console.log("  Updating ", this.props.name);
+      console.log("    RouteState: ", this.props)
 			console.log("    Current route name: ", name);
 			console.log("    Visible: ", visible)
 			this.setState({visible: visible})
 	}
 	componentDidMount() {
-		var store = this.context["store"] as redux.Store<RouteState>;
+		var store = this.context["routeStore"] as redux.Store<RouteState>;
 		console.log("Mounting Route for ", this.props.name)
 
 		// Subscribe to the store and record the unsubscribe function
