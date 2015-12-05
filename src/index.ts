@@ -1,6 +1,6 @@
 export { setPath, mapPath, applyAt, updeepStore, updeepReducer, overlay } from './updeep';
 
-export { Actor, Subscribe } from './actor';
+export { Reactor, Subscribe } from './reactors';
 
 export { OpAction, Evaluator, OpReducer, DefOp, Operation } from './ops';
 
