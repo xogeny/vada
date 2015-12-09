@@ -21,22 +21,27 @@ export type Reactor<T> = (state: T, dispatch: redux.Dispatch) => void;
 // with a Store<T>.  It handles the subscription to the store to allow
 // all the reactors to react to store changes.
 export function Subscribe<T>(store: redux.Store<T>, reactors: Array<Reactor<T>>) {
-	var acting = false;
+    var acting = false;
 
-  // Run all reactors
-  var process = () => {
-		if (!acting) {
-			acting = true;
-			reactors.forEach((reactor: Reactor<T>) => {
-        reactor(store.getState(), store.dispatch)
-      });
-			acting = false;
+    // Run all reactors
+    var process = () => {
+	if (!acting) {
+	    acting = true;
+	    reactors.forEach((reactor: Reactor<T>) => {
+		try {
+		    reactor(store.getState(), store.dispatch)
+		} catch(e) {
+		    console.error("While processing reactor ", reactor);
+		    console.error("  ", e)
 		}
+	    });
+	    acting = false;
 	}
+    }
 
-  // Run 'process' whenever the state is update
-	store.subscribe(process);
+    // Run 'process' whenever the state is update
+    store.subscribe(process);
 
-  // First these reactors for the current state of the store as well.
-  process();
+    // First these reactors for the current state of the store as well.
+    process();
 }

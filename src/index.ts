@@ -4,9 +4,9 @@ export { Reactor, Subscribe } from './reactors';
 
 export { initializeRouting, paramObj, addRoutes, addRoute, href,
          RouteState, setRoute, routeReducer, Route,
-         Provider, initialRouteState } from './routing';
+         Provider, initialRouteState, setHash } from './routing';
 
-export { OpAction, Evaluator, OpReducer, DefOp, Operation } from './ops';
+export { OpAction, Evaluator, OpReducer, OpStore, DefOp, Operation } from './ops';
 
 export { bindClass } from './connect';
 
