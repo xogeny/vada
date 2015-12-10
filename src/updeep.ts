@@ -8,17 +8,17 @@ import { get, Path } from './access';
 import { FluxStandardAction as FSA } from './actions';
 
 export interface PathPayload {
-	path: Path; // member reference
+    path: Path; // member reference
 }
 
 // The SetPathPayload type is used by the setPath action
 export interface SetPathPayload extends PathPayload {
-	v: any;     // value to give that member
+    v: any;     // value to give that member
 }
 
 // The MapPathPayload type is used by the mapPath action
 export interface MapPathPayload<T> extends PathPayload {
-	f: (v: T) => T; // function to apply to that member
+    f: (v: T) => T; // function to apply to that member
 }
 
 export type PathAction<T extends PathPayload> = FSA<T, void>;
@@ -26,19 +26,19 @@ export type SetAction = PathAction<SetPathPayload>;
 export type MapAction<T> = PathAction<MapPathPayload<T>>;
 
 // Constant used as the action type for the setPath action
-export const UPDEEP_SET_PATH = 'UPDEEP_SET_PATH';
+export const UPDEEP_SET_PATH: string = 'UPDEEP_SET_PATH';
 
 // An action creator that creates an action that sets a given
 // element in an object hierarchy to a specified value
 export const setPath = <T>(path: Path, v: T): SetAction => {
-	return {
-		type: UPDEEP_SET_PATH,
-		payload: {
-			path: path,
-			v: v
-		}
-	}
-}
+    return {
+        "type": UPDEEP_SET_PATH,
+        "payload": {
+            path: path,
+            v: v,
+        },
+    };
+};
 
 // An action creator that creates an action that overlays
 // data a portion of the state on top of the previous state.
@@ -48,13 +48,13 @@ export const setPath = <T>(path: Path, v: T): SetAction => {
 // This is nearly analogous to the setPath action except
 // that a) it allows more fields to be set and b) it provides
 // greater type safety.
-export const UPDEEP_OVERLAY = 'UPDEEP_OVERLAY';
-export const overlay = <T>(partial: T): FSA<T,void> => {
-	return {
-		type: UPDEEP_OVERLAY,
-		payload: partial
-	}
-}
+export const UPDEEP_OVERLAY: string = 'UPDEEP_OVERLAY';
+export const overlay = <T>(partial: T): FSA<T, void> => {
+    return {
+        "type": UPDEEP_OVERLAY,
+        "payload": partial,
+    };
+};
 
 // Constant used as the action type for the mapPath action
 export const UPDEEP_MAP_PATH = 'UPDEEP_MAP_PATH';
@@ -62,14 +62,14 @@ export const UPDEEP_MAP_PATH = 'UPDEEP_MAP_PATH';
 // An action creator that creates an action that applies the provided
 // function to the value of a specified element in an object hierarchy
 export const mapPath = <T>(path: Path, f: (v: T) => T): MapAction<T> => {
-	return {
-		type: UPDEEP_MAP_PATH,
-		payload: {
-			path: path,
-			f: f
-		}
-	}
-}
+    return {
+        "type": UPDEEP_MAP_PATH,
+        "payload": {
+            "path": path,
+            "f": f,
+        },
+    };
+};
 
 // This function takes an existing PathAction (one where the target is specified
 // with a Array<string|number>) and prepends some additional path elements to
@@ -77,25 +77,27 @@ export const mapPath = <T>(path: Path, f: (v: T) => T): MapAction<T> => {
 // action passed as an argument.
 export function applyAt<T extends PathPayload>(path: Path, action: PathAction<T>)
 : PathAction<T> {
-	let newpath: Path = [].concat(path).concat(action.payload.path)
-	return updeep({payload: { path: newpath}}, action);
+    'use strict';
+    let newpath: Path = [].concat(path).concat(action.payload.path);
+    return updeep({payload: { path: newpath}}, action);
 }
 
 export interface UpdeepAction<T> {
-	(s: T, action: Action): T;
+    (s: T, action: Action): T;
 }
 
 export type ActionMap<T> = { [key: string]: UpdeepAction<T> };
 
 export function updeepReducer2<T extends {}>(state0: T, actions: ActionMap<T>): Reducer<T> {
-	return function red(state: T = state0, action: Action) {
-		var act = actions[action.type];
-		if (act) {
-			return act(state, action);
-		}
-		return state;
-	}
-}
+    'use strict';
+    return function red(state: T = state0, action: Action): T {
+        let act = actions[action.type];
+        if (act) {
+            return act(state, action);
+        }
+        return state;
+    };
+};
 
 // This function produces a reducer that manages an object of the specified
 // type, T.  To create the reducer, an initial state value must be provided.
@@ -104,28 +106,30 @@ export function updeepReducer2<T extends {}>(state0: T, actions: ActionMap<T>): 
 //    - UPDEEP_MAP_PATH: Apply the specified function an the value of the given element
 //    - UPDEEP_OVERLAY: Apply an overlay to a given value
 export function updeepReducer<T extends {}>(state0: T): Reducer<T> {
-	return function red(state: T = state0, action: Action) {
-		switch (action.type) {
-		case UPDEEP_SET_PATH:
-			let sa = action as SetAction;
-			// Update the value in the hierarchy to a prescribed value
-			return updeep.updateIn(sa.payload.path, sa.payload.v, state);
-		case UPDEEP_MAP_PATH:
-			let ma = action as MapAction<any>;
-			// Get the current value of the specified element
-			let mcur = get(ma.payload.path, state)
-			// Update it's value to the result of applying the provided function
-			return updeep.updateIn(ma.payload.path, ma.payload.f(mcur), state);
-		case UPDEEP_OVERLAY:
-			let oa = action as FSA<{},any>;
-			return updeep(oa.payload, state);
-		default:
-			return state;
-		}
-	}
-}
+    'use strict';
+    return function red(state: T = state0, action: Action): T {
+        switch (action.type) {
+        case UPDEEP_SET_PATH:
+            let sa = action as SetAction;
+            // Update the value in the hierarchy to a prescribed value
+            return updeep.updateIn(sa.payload.path, sa.payload.v, state);
+        case UPDEEP_MAP_PATH:
+            let ma = action as MapAction<any>;
+            // Get the current value of the specified element
+            let mcur: any = get(ma.payload.path, state);
+            // Update it's value to the result of applying the provided function
+            return updeep.updateIn(ma.payload.path, ma.payload.f(mcur), state);
+        case UPDEEP_OVERLAY:
+            let oa = action as FSA<{}, any>;
+            return updeep(oa.payload, state);
+        default:
+            return state;
+        }
+    };
+};
 
 // Create a store for a state of type T given an initial state.
 export function updeepStore<T extends {}>(state0: T): Store<T> {
-	return createStore(updeepReducer(state0));
+    'use strict';
+    return createStore(updeepReducer(state0));
 }

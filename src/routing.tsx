@@ -4,7 +4,11 @@ import React = require('react');
 import redux = require('redux');
 
 import crossroads = require('crossroads');
-import hasher = require('hasher');
+var hasher: HasherJs.HasherStatic = null;
+
+if (typeof window !== 'undefined') {
+    hasher = require('hasher');
+}
 
 import { DefOp, OpReducer, Operation } from './ops';
 import { SimpleStore } from './store';
@@ -31,10 +35,12 @@ export function initializeRouting(callback: RoutingCallback) {
         crossroads.parse(newHash);
     }
 
-    hasher.initialized.add(parseHash); //parse initial hash
-    hasher.changed.add(parseHash); //parse hash changes
+    if (hasher!=null) {
+	hasher.initialized.add(parseHash); //parse initial hash
+	hasher.changed.add(parseHash); //parse hash changes
     
-    hasher.init(); //start listening for history change
+	hasher.init(); //start listening for history change
+    }
 }
 
 export function paramObj(route: CrossroadsJs.RouteData): { [key: string]: any } {
@@ -61,7 +67,9 @@ export function addRoute(name: string, pattern: string) {
 
 export function setHash(id: string, params?: {}): string {
     var url = href(id, params);
-    hasher.setHash(url);
+    if (hasher!=null) {
+	hasher.setHash(url);
+    }
     return url
 }
 
