@@ -5,6 +5,7 @@
     "main": "./js/src/index.js",
     "scripts": {
         "prepublish": "tsc",
+        "compile": "tsc",
         "test": "mocha",
         "lint": "tslint src/*.ts -c tslint.config"
     },
