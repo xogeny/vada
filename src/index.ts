@@ -1,15 +1,18 @@
-export { setPath, mapPath, applyAt, updeepStore, updeepReducer, overlay } from './updeep';
+export { setPath, mapPath, applyAt, updeepStore,
+         updeepReducer, overlay } from './updeep';
 
-export { Reactor, Subscribe } from './reactors';
+export { Reactor, subscribe, wrapReducer } from './reactors';
 
 export { initializeRouting, paramObj, addRoutes, addRoute, href,
-         RouteState, setRoute, routeReducer, Route,
-         Provider, initialRouteState, setHash } from './routing';
+         RouteState, setRoute, routeReducer, 
+         initialRouteState, setHash } from './routing';
 
 export { OpAction, Evaluator, OpReducer, OpStore, DefOp, Operation } from './ops';
 
-export { bindClass } from './connect';
+//export { Route, Provider } from './react';
 
-export { SimpleStore, SubStore } from './store';
+//export { bindClass } from './connect';
+
+export { SimpleStore, SubStore, wrapStore, WrapperFunction } from './store';
 
 export { FluxStandardAction } from './actions';

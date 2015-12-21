@@ -1,3 +1,23 @@
+import redux = require('redux')
+
+export type WrapperFunction<S> = (store: redux.Store<S>) => redux.Store<S>;
+
+// This function wraps an existing store in a new store.  The
+// "outer" store just proxies requests to the inner store.  But
+// specific operations can then be selectively overridden
+// post-wrapping (e.g., to log actions, states, etc)
+export function wrapStore<S>(store: redux.Store<S>): redux.Store<S> {
+    return {
+        getReducer: () => store.getReducer(),
+	replaceReducer: (n: redux.Reducer<S>) => store.replaceReducer(n),
+	dispatch: <A extends redux.Action>(action: A) => {
+            return store.dispatch(action)
+	},
+	getState: () => store.getState(),
+	subscribe: (listener: () => void) => store.subscribe(listener)
+    }
+}
+
 // This is just a subset of the normal Store interface that doesn't
 // deal with dispatching, etc.
 export interface SimpleStore<T> {
@@ -17,6 +37,8 @@ export class SubStore<P, C> implements SimpleStore<C> {
         let childState: C = this.smap(parentState);
         return childState;
     }
+    // TODO: Trigger subscribe listeners only if this particular part
+    // of the state has changed (requires keeping previous state)
     public subscribe(listener: () => void): () => void {
         return this.store.subscribe(listener);
     }

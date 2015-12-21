@@ -1,5 +1,8 @@
-import React = require("react");
-import { SimpleStore } from "./store";
+import React = require('react');
+import redux = require('redux');
+
+import { SimpleStore } from './store';
+import { RouteState } from './routing';
 
 // This is a really useful function.  It is analogous to the connect functionality
 // in react-redux.  But I write it natively in Typescript because I think it is
@@ -68,4 +71,83 @@ export function bindClass<P, S>(store: SimpleStore<S>,
             return store.getState();
         },
     });
+}
+
+export interface ProviderProps extends React.Props<void> {
+    store: redux.Store<any>;
+    routeStore: SimpleStore<RouteState>;
+}
+
+export class Provider extends React.Component<ProviderProps,void> {
+    static childContextTypes = {
+	store: React.PropTypes.object,
+	routeStore: React.PropTypes.object
+    }
+    getChildContext() {
+	return {
+            store: this.props.store,
+            routeStore: this.props.routeStore
+	};
+    }
+    render() {
+	return <div>{this.props.children}</div>;
+    }
+}
+
+export interface RouteProps extends React.Props<void>{
+    name: string;
+}
+
+export interface RouteVisibilityState {
+    visible: boolean;
+}
+
+export class Route extends React.Component<RouteProps, RouteVisibilityState> {
+    public unsub: () => void;
+    static contextTypes = {
+	routeStore: React.PropTypes.object,
+    }
+    constructor(props?: RouteProps) {
+	super(props);
+	this.state = {visible: false};
+    }
+
+    componentWillUnmount() {
+	// If the component gets unmounted, unsubscribe from the
+	// store.
+	console.log("Unmounting ", this.props.name);
+	if (this.unsub!=null) {
+	    this.unsub();
+	    console.log("  Unsubscribed ", this.props.name);
+	} else {
+	    console.log("  No subscription for ", this.props.name);
+	}
+    }
+    update(s: RouteState) {
+	var name = s.name;
+	var visible = name == this.props.name;
+	console.log("  Updating ", this.props.name);
+	console.log("    RouteState: ", this.props)
+	console.log("    Current route name: ", name);
+	console.log("    Visible: ", visible)
+	this.setState({visible: visible})
+    }
+    componentDidMount() {
+	var store = this.context["routeStore"] as redux.Store<RouteState>;
+	console.log("Mounting Route for ", this.props.name)
+
+	// Subscribe to the store and record the unsubscribe function
+	this.unsub = store.subscribe(() => {
+	    this.update(store.getState());
+	});
+	this.update(store.getState());
+    }
+
+    render(): JSX.Element {
+	if (this.state.visible) {
+	    return <div>this.props.children</div>;
+	} else {
+	    return null;
+	}
+    }
 }
