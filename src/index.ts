@@ -3,11 +3,12 @@ export { setPath, mapPath, applyAt, updeepStore,
 
 export { Reactor, subscribe, wrapReducer } from './reactors';
 
-export { initializeRouting, paramObj, addRoutes, addRoute, href,
-         RouteState, setRoute, routeReducer, 
-         initialRouteState, setHash } from './routing';
+export { RouteState, setRoute, routeReducer, 
+         initialRouteState, RouteId } from './routing';
 
 export { OpAction, Evaluator, OpReducer, OpStore, DefOp, Operation } from './ops';
+
+// export { paramObj, addRoutes, addRoute, href, setHash } from './browser';
 
 //export { Route, Provider } from './react';
 
