@@ -18,6 +18,11 @@ export interface Operation<T, P> {
     evaluate: (s: T, p: P) => T;
 }
 
+// The DefOp function allow us to define an operation that we expect
+// to operate on a state of type T and using a payload (parameter for
+// the transformation) of type P.  This generates an Operation<T, P> which
+// consists of both an Action Creator (request) and the a tranformation
+// code (evaluate).
 export function DefOp<T, P>(type: string, evaluate: Evaluator<T, P>)
 : Operation<T, P> {
     'use strict';
@@ -32,6 +37,20 @@ export function DefOp<T, P>(type: string, evaluate: Evaluator<T, P>)
         },
         "evaluate": evaluate,
     };
+}
+
+// The SubOp function allows a given operation (op) to be applied to some
+// member of the state.  The assumption here is that the store manages
+// a state of type T but that T has a member of type S for which an
+// operation, op, exists that takes a payload of type P.  This function
+// then creates an Operation that operates on T given a function, trans,
+// that defines how to update the member of type S.  Got that? :-)
+export function SubOp<T, S, P>(name: string,
+                               op: Operation<S, P>,
+                               trans: (S: T, f: (s: S) => S) => T) {
+    return DefOp(name, (s: T, p: P) => {
+        return trans(s, (s: S) => op.evaluate(s, p));
+    });
 }
 
 export type Operations<T> = Array<Operation<T, any>>;

@@ -30,7 +30,7 @@ export function addRoute<T>(name: string, pattern: string): RouteId<T> {
     var ret = crossroads.addRoute(pattern);
     routeMap[name] = ret;
     reverseMap[pattern] = name;
-    return new RouteId(name);
+    return new RouteId<T>(name);
 }
 
 export function setHash<T>(route: RouteId<T>, params?: T): string {
