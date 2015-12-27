@@ -2,22 +2,22 @@ import redux = require('redux');
 
 import { DefOp, OpReducer, Operation } from './ops';
 import { SimpleStore } from './store';
-import { Reactor } from './reactors';
+import { InlineReactor } from './reactors';
 
 // This has a type parameter, but this is "artificial".  It is meant
 // to be used to establish the type of the data associated with this
 // route and to be used to signal that type information when an instance
 // of this type is passed into and out of other functions.
 export class RouteId<P extends {}> {
-    constructor(public id: string) { }
-    apply(p: P): RouteState {
+    constructor(public id: string) {
+    }
+    public apply(p: P): RouteState {
         return {
             name: this.id,
             params: p,
         };
     }
 }
-
 
 // State information about route
 export interface RouteState {
@@ -41,6 +41,9 @@ export const initialRouteState = {
 export const routeReducer = OpReducer(initialRouteState, [setRoute]);
 
 function equalParams(a: {}, b: {}): Boolean {
+    if (a===b) return true;
+    if (a===null && b!==null) return false;
+    if (a!==null && b===null) return false;
     // Create arrays of property names
     var aProps = Object.keys(a);
     var bProps = Object.keys(b);
@@ -70,21 +73,29 @@ function equalParams(a: {}, b: {}): Boolean {
 // state.
 // N.B. - We are considered to have entered a route if the route is the
 // same but the **parameters** have changed.
-export function onEnter<P>(route: RouteId<P>,
-                           trans: (s: RouteState, // State we are entering
-                                   p: P,
-                                   dispath: redux.Dispatch) => void)
-: Reactor<RouteState> {
-    return (next: RouteState, dispatch: redux.Dispatch, prev: RouteState) => {
+export function onEnter<S,P>(route: RouteId<P>,
+                             pull: (s: S) => RouteState,
+                             trans: (s: S, p: P) => S)
+: InlineReactor<S> {
+    return (next: S, prev: S): S => {
+        if (prev===null || prev===undefined) return next;
+        if (next===null || next===undefined) return next;
+        let prevRoute = pull(prev);
+        let nextRoute = pull(next);
+        if (nextRoute===null || nextRoute===undefined) return next;
         // If we aren't entering the specified route, there is nothing
         // to do...
-        if (next.name!=route.id) return;
+        if (nextRoute.name!=route.id) return next;
 
-        // If we are entering the specified route but the parameters are
-        // the same, then there is nothing to do...
-        if (prev.name==next.name && equalParams(prev.params, next.params)) return;
+        // If we are entering the specified route but the previous
+        // route was the same and the parameters are the same, then
+        // there is nothing to do...
+        if (prevRoute!==null &&
+            prevRoute!==undefined &&
+            prevRoute.name==nextRoute.name &&
+            equalParams(prevRoute.params, nextRoute.params)) return next;
 
-        trans(next, (next.params) as P, dispatch);
+        return trans(next, (nextRoute.params) as P);
     }
 }
 
@@ -92,20 +103,28 @@ export function onEnter<P>(route: RouteId<P>,
 // entered a new state that was entered from the specified state.
 // N.B. - We are considered to have exited a route if the route is the
 // same but the **parameters** have changed.
-export function onExit<P>(route: RouteId<P>,
-                           trans: (s: RouteState, // State we are leaving
-                                   p: P,
-                                   dispath: redux.Dispatch) => void)
-: Reactor<RouteState> {
-    return (next: RouteState, dispatch: redux.Dispatch, prev: RouteState) => {
-        // If we aren't leaving the specified route, there is nothing
+export function onExit<S,P>(route: RouteId<P>,
+                            pull: (s: S) => RouteState,
+                            trans: (s: S, p: P) => S)
+: InlineReactor<S> {
+    return (next: S, prev: S): S => {
+        if (prev===null || prev===undefined) return next;
+        if (next===null || next===undefined) return next;
+        let prevRoute = pull(prev);
+        let nextRoute = pull(next);
+        if (prevRoute===null || prevRoute===undefined) return next;
+        // If we aren't exiting the specified route, there is nothing
         // to do...
-        if (prev.name!=route.id) return;
+        if (prevRoute.name!=route.id) return next;
 
-        // If we are leaving the specified route but the parameters are
-        // the same, then there is nothing to do...
-        if (prev.name==next.name && equalParams(prev.params, next.params)) return;
+        // If we are exiting the specified route but the next
+        // route is the same and the parameters are the same, then
+        // there is nothing to do...
+        if (nextRoute!==null &&
+            nextRoute!==undefined &&
+            prevRoute.name==nextRoute.name &&
+            equalParams(prevRoute.params, nextRoute.params)) return next;
 
-        trans(prev, (next.params) as P, dispatch);
+        return trans(next, (nextRoute.params) as P);
     }
 }
