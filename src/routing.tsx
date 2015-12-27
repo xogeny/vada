@@ -33,6 +33,15 @@ export const setRoute = DefOp("Route/SET_ROUTE", (r: RouteState, p: RouteState) 
     }
 })
 
+// This function is used to generate a callback for the ts-redux-browser
+// function 'initializeRouting'.  It responds to route changles in
+// the browsers location bar by dispatching a 'setRoute' action.
+export function routingCallback<T>(store: redux.Store<T>) {
+    return ((name: string, params: {}) => {
+        store.dispatch(setRoute.request({name: name, params: params}));
+    });
+};
+
 export const initialRouteState = {
     name: "",
     params: {}
