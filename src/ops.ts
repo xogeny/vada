@@ -1,8 +1,12 @@
 import redux = require('redux');
 import uuid = require('node-uuid');
 
+export interface OpMeta {
+}
+
 export interface OpAction<P> extends redux.Action {
     payload: P;
+    meta: OpMeta;
 }
 
 export type OpActionCreator<P> = (p: P) => OpAction<P>;
@@ -13,9 +17,16 @@ export type Evaluator<T, P> = (s: T, payload: P) => T;
 // to formulate a request for this operation and, finally, the code
 // to perform the operation.
 export interface Operation<T, P> {
+    // A unique identifier for this particular operation
     type: string;
+    // An action creator (takes a payload, returns an action)
     request: OpActionCreator<P>;
+    // Method that performs that actual state transformation
     evaluate: (s: T, p: P) => T;
+    // Method to check whether a given action performs this operation
+    instance: (a: OpAction<any>) => Boolean;
+    // Method to cast an existing action to an action for this operation
+    cast: (a: OpAction<any>) => OpAction<P>;
 }
 
 // The DefOp function allow us to define an operation that we expect
@@ -33,9 +44,17 @@ export function DefOp<T, P>(type: string, evaluate: Evaluator<T, P>)
             return {
                 "type": id,
                 "payload": p,
+                "meta": {
+                }
             };
         },
         "evaluate": evaluate,
+        "instance": (a: OpAction<any>) => {
+            return a.type===id;
+        },
+        "cast": (a: OpAction<any>): OpAction<P> => {
+            return a as OpAction<P>;
+        }
     };
 }
 
