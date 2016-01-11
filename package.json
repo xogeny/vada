@@ -1,7 +1,7 @@
 {
-    "name": "ts-redux",
-    "version": "0.1.3",
-    "description": "A bunch of utilities for users of both TypeScript and redux",
+    "name": "vada",
+    "version": "0.8.0",
+    "description": "Viewless, Action Driven Architecture",
     "main": "./js/src/index.js",
     "scripts": {
         "prepublish": "tsc",
@@ -13,21 +13,26 @@
         "redux",
         "typescript"
     ],
+    "repository": {
+        "type": "git",
+        "url": "http://github.com/xogeny/vada.git"
+    },
+    "author": {
+        "name": "Michael M. Tiller",
+        "email": "michael.tiller@gmail.com",
+        "url": "http://www.xogeny.com"
+    },
     "typings": "./js/src/index.d.ts",
-    "author": "Michael M. Tiller",
     "license": "MIT",
     "dependencies": {
         "crossroads": "^0.12.2",
-        "hasher": "^1.2.0",
         "lodash": "^3.10.1",
         "node-uuid": "^1.4.7",
-        "react": "^0.14.3",
         "redux": "^3.0.4",
         "updeep": "^0.11.0"
     },
     "devDependencies": {
         "chai": "^3.4.1",
-        "redux-devtools": "^2.1.5",
         "ts-node": "^0.5.4",
         "typescript": "^1.6.2"
     }
