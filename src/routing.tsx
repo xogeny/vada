@@ -4,11 +4,12 @@ import { DefOp, OpReducer, Operation } from './ops';
 import { SimpleStore } from './store';
 import { InlineReactor } from './reactors';
 
+export type ParamMap = { [key: string]: any };
 // This has a type parameter, but this is "artificial".  It is meant
 // to be used to establish the type of the data associated with this
 // route and to be used to signal that type information when an instance
 // of this type is passed into and out of other functions.
-export class RouteId<P extends {}> {
+export class RouteId<P extends ParamMap> {
     constructor(public id: string) {
     }
     public apply(p: P): RouteState {
@@ -20,10 +21,9 @@ export class RouteId<P extends {}> {
 }
 
 // State information about route
-// TODO: make params { [key: string]: string };
 export interface RouteState {
     name: string;
-    params: {};
+    params: ParamMap;
 }
 
 // Actions
