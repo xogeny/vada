@@ -1,5 +1,17 @@
 # Viewless, Action Driven Architecture
 
+![VadaLogo](https://rawgithub.com/xogeny/vada/master/images/logo.svg)
+
+## Getting
+
+You can install this module using `npm` with:
+
+```
+npm install vada
+```
+
+## Introduction
+
 While both migrating existing applications and creating new ones,
 incorporating `redux` and `react` into my applications has pushed me
 toward an approach that takes a hard line in the separation of view
