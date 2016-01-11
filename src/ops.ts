@@ -77,6 +77,7 @@ export type Operations<T> = Array<Operation<T, any>>;
 export function OpReducer<T>(state0: T, evals: Operations<T>): redux.Reducer<T> {
     'use strict';
     return (state: T = state0, action: OpAction<any>) => {
+        if (!action) return state;
         evals.forEach((info: Operation<T, any>) => {
             if (info.type===action.type) {
                 state = info.evaluate(state, action.payload);
