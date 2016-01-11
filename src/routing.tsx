@@ -20,6 +20,7 @@ export class RouteId<P extends {}> {
 }
 
 // State information about route
+// TODO: make params { [key: string]: string };
 export interface RouteState {
     name: string;
     params: {};
@@ -36,9 +37,14 @@ export const setRoute = DefOp("Route/SET_ROUTE", (r: RouteState, p: RouteState) 
 // This function is used to generate a callback for the ts-redux-browser
 // function 'initializeRouting'.  It responds to route changles in
 // the browsers location bar by dispatching a 'setRoute' action.
-export function routingCallback<T>(store: redux.Store<T>) {
-    return ((name: string, params: {}) => {
-        store.dispatch(setRoute.request({name: name, params: params}));
+export function routingCallback<T>(store: redux.Store<T>,
+                                   bypass?: () => void) {
+    return ((name: string, params: {}, data: any) => {
+        if (data===null && bypass!==undefined) {
+            bypass();
+        } else {
+            store.dispatch(setRoute.request({name: name, params: params}));
+        }
     });
 };
 
