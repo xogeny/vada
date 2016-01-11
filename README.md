@@ -15,7 +15,7 @@ npm install vada
 While both migrating existing applications and creating new ones,
 incorporating `redux` and `react` into my applications has pushed me
 toward an approach that takes a hard line in the separation of view
-form application logic.
+from application logic.
 
 My main motivation was around making testing as easy as possible.  My
 goal was to create applications where the view was completely external
@@ -113,3 +113,6 @@ generating unique action names so as to avoid action naming conflicts.
 Finally, if you are working with TypeScript, of providing some nice
 type constraints for type checking action payloads.
 
+## TODO
+
+More tests, more docs, more feedback.
