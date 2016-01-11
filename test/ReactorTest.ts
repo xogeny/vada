@@ -28,6 +28,17 @@ describe("Test reactors", () => {
                 exitedMain: s.exitedMain,
             }
         }
+    it("should be able to apply routes", () => {
+        expect(main.apply(null)).to.deep.equal({
+            name: "main",
+            params: null,
+        });
+
+        expect(loading.apply({num: 5})).to.deep.equal({
+            name: "loading",
+            params: {num: 5},
+        });
+    });
     it("should process actions", () => {
         let store = redux.createStore(rootReducer);
 
