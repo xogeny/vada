@@ -1,6 +1,6 @@
 # Viewless, Action Driven Architecture
 
-![VadaLogo](https://rawgithub.com/xogeny/vada/master/images/logo.svg)
+![VadaLogo](https://raw.githubusercontent.com/xogeny/vada/master/images/logo.svg)
 
 ## Getting
 
