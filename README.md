@@ -113,6 +113,22 @@ generating unique action names so as to avoid action naming conflicts.
 Finally, if you are working with TypeScript, of providing some nice
 type constraints for type checking action payloads.
 
+## Additional Functionality
+
+This module represents the core functionality for creating an
+application where logic is decoupled from the view.  As such, to
+connect a `vada` application to a particular view, some additional
+functionality is required.  The following modules build upon the
+functionality defined by `vada`.
+
+* [`vada-react`](http://github.com/xogeny/vada-react] - Functionality
+  to help syncronize `react` based applications to `vada` application
+  state.
+
+* [`vada-browser`](http://github.com/xogeny/vada-browser] -
+  This module is for browser based application and it ties the browser's
+  current `window.location` to routes defined using `vada`.
+
 ## TODO
 
 More tests, more docs, more feedback.
