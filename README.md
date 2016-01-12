@@ -1,5 +1,7 @@
 # Viewless, Action Driven Architecture
 
+[![Build Status](https://travis-ci.org/xogeny/vada.png)](https://travis-ci.org/xogeny/vada)
+
 ![VadaLogo](https://raw.githubusercontent.com/xogeny/vada/master/images/logo.png)
 
 ## Getting
