@@ -24,7 +24,7 @@ approach, the flow of the application is entirely described via a
 `redux` store and actions dispatched against that store (hence the
 term "action driven").
 
-Another motivation behind this module, which probably not of much
+Another motivation behind this module, which is probably not of much
 interest to the larger Javascript development community, was to
 provide type constraints around many of these patterns.  So if you use
 TypeScript, you can benefit from my efforts to include as many type
