@@ -121,11 +121,11 @@ connect a `vada` application to a particular view, some additional
 functionality is required.  The following modules build upon the
 functionality defined by `vada`.
 
-* [`vada-react`](http://github.com/xogeny/vada-react] - Functionality
+* [`vada-react`](http://github.com/xogeny/vada-react) - Functionality
   to help syncronize `react` based applications to `vada` application
   state.
 
-* [`vada-browser`](http://github.com/xogeny/vada-browser] -
+* [`vada-browser`](http://github.com/xogeny/vada-browser) -
   This module is for browser based application and it ties the browser's
   current `window.location` to routes defined using `vada`.
 
