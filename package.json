@@ -1,8 +1,8 @@
 {
     "name": "vada",
-    "version": "0.8.0",
+    "version": "0.8.2",
     "description": "Viewless, Action Driven Architecture",
-    "main": "./js/src/index.js",
+    "main": "./lib/src/index.js",
     "scripts": {
         "prepublish": "tsc",
         "compile": "tsc",
@@ -22,7 +22,7 @@
         "email": "michael.tiller@gmail.com",
         "url": "http://www.xogeny.com"
     },
-    "typings": "./js/src/index.d.ts",
+    "typings": "./lib/src/index.d.ts",
     "license": "MIT",
     "dependencies": {
         "crossroads": "^0.12.2",

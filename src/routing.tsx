@@ -39,8 +39,8 @@ export const setRoute = DefOp("Route/SET_ROUTE", (r: RouteState, p: RouteState) 
 // the browsers location bar by dispatching a 'setRoute' action.
 export function routingCallback<T>(store: redux.Store<T>,
                                    bypass?: () => void) {
-    return ((name: string, params: {}, data: any) => {
-        if (data===null && bypass!==undefined) {
+    return ((name: string, params: {}) => {
+        if (name===null && bypass!==undefined) {
             bypass();
         } else {
             store.dispatch(setRoute.request({name: name, params: params}));

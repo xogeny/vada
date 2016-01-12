@@ -1,7 +1,7 @@
 {
     "version": "1.6.2",
     "compilerOptions": {
-        "outDir": "./js",
+        "outDir": "./lib",
         "target": "es5",
         "module": "commonjs",
         "moduleResolution": "node",
@@ -16,5 +16,5 @@
         "preserveConstEnums": true,
         "suppressImplicitAnyIndexErrors": true
     },
-    "exclude": ["node_modules", "js"]
+    "exclude": ["node_modules", "lib"]
 }
