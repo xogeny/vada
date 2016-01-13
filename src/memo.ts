@@ -31,3 +31,28 @@ export function memo2<T1, T2, R>(f: Binary<T1, T2, R>): Binary<T1, T2, R> {
         return pres;
     }
 }
+
+function different<T>(a: T, b: T): boolean {
+    let ret = false;
+    for(let k in a) {
+        if (a[k]!==b[k]) {
+            ret = true;
+            break;
+        }
+    }
+    return ret;
+}
+
+export function multiMemo<T extends {}, R>(f: Unary<T, R>): Unary<T, R> {
+    var called: boolean = false;
+    var parg: T = undefined;
+    var pres: R = undefined;
+    return (arg: T): R => {
+        if (!called || !parg || different(arg, parg)) {
+            pres = f(arg);
+            parg = arg;
+            called = true;
+        }
+        return pres;
+    }
+}
