@@ -43,6 +43,10 @@ function different<T>(a: T, b: T): boolean {
     return ret;
 }
 
+// This function works by marshalling all arguments into a single
+// object.  Note that when looking for changes, this function only
+// does a *shallow* comparison of the values of each property of the
+// argument.  It does not do a deep equality check.
 export function multiMemo<T extends {}, R>(f: Unary<T, R>): Unary<T, R> {
     var called: boolean = false;
     var parg: T = undefined;
