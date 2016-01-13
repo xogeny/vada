@@ -3,10 +3,10 @@ import redux = require('redux');
 
 import { expect } from 'chai';
 
-import * as tsr from '../src';
+import * as vada from '../src';
 
 interface RootState {
-    route: tsr.RouteState;
+    route: vada.RouteState;
     enteredMain: number;
     exitedMain: number;
 }
@@ -18,12 +18,12 @@ let initialState: RootState = {
 }
 
 describe("Test reactors", () => {
-    let main = new tsr.RouteId<{num: number}>("main");
-    let loading = new tsr.RouteId<{num: number}>("loading");
+    let main = new vada.RouteId<{num: number}>("main");
+    let loading = new vada.RouteId<{num: number}>("loading");
     let rootReducer: redux.Reducer<RootState> =
         (s: RootState = initialState, action: redux.Action) => {
             return {
-                route: tsr.routeReducer(s.route, action),
+                route: vada.routeReducer(s.route, action),
                 enteredMain: s.enteredMain,
                 exitedMain: s.exitedMain,
             }
@@ -43,14 +43,14 @@ describe("Test reactors", () => {
         let store = redux.createStore(rootReducer);
 
         expect(store.getState().route).to.equal(null);
-        store.dispatch(tsr.setRoute.request(main.apply({num: 2})));
+        store.dispatch(vada.setRoute.request(main.apply({num: 2})));
         expect(store.getState().route).to.not.equal(null);
         expect(store.getState().route.name).to.equal(main.id);
         expect(store.getState().enteredMain).to.equal(0);
         expect(store.getState().exitedMain).to.equal(0);
     });
     it("should process reactions", () => {
-        let EnterMain = tsr.onEnter<RootState, {}>(main, (s) => s.route, (s, p) => {
+        let EnterMain = vada.onEnter<RootState, {}>(main, (s) => s.route, (s, p) => {
             //console.log("Entering main");
             return {
                 route: s.route,
@@ -59,7 +59,7 @@ describe("Test reactors", () => {
             };
         });
 
-        let ExitMain = tsr.onExit<RootState, {}>(main, (s) => s.route, (s, p) => {
+        let ExitMain = vada.onExit<RootState, {}>(main, (s) => s.route, (s, p) => {
             //console.log("Exiting main");
             return {
                 route: s.route,
@@ -67,8 +67,8 @@ describe("Test reactors", () => {
                 exitedMain: s.exitedMain+1,
             };
         });
-        let store = redux.createStore(tsr.wrapReducer(rootReducer,
-                                                      [EnterMain, ExitMain]));
+        let store = redux.createStore(vada.wrapReducer(rootReducer,
+                                                       [EnterMain, ExitMain]));
 
         expect(store.getState().route).to.equal(null);
 
@@ -76,7 +76,7 @@ describe("Test reactors", () => {
         expect(store.getState().enteredMain).to.equal(0);
         expect(store.getState().exitedMain).to.equal(0);
 
-        store.dispatch(tsr.setRoute.request(main.apply({num: 2})));
+        store.dispatch(vada.setRoute.request(main.apply({num: 2})));
 
         expect(store.getState().route).to.not.equal(null);
         expect(store.getState().route.name).to.equal(main.id);
@@ -86,19 +86,19 @@ describe("Test reactors", () => {
         expect(store.getState().exitedMain).to.equal(0);
 
         // No change, same parameters
-        store.dispatch(tsr.setRoute.request(main.apply({num: 2})));        
+        store.dispatch(vada.setRoute.request(main.apply({num: 2})));        
         
         expect(store.getState().enteredMain).to.equal(1);
         expect(store.getState().exitedMain).to.equal(0);
 
         // Exit and Enter (change in parameters)
-        store.dispatch(tsr.setRoute.request(main.apply({num: 3})));
+        store.dispatch(vada.setRoute.request(main.apply({num: 3})));
 
         expect(store.getState().enteredMain).to.equal(2);
         expect(store.getState().exitedMain).to.equal(1);
 
         // Exit only
-        store.dispatch(tsr.setRoute.request(loading.apply({num: 3})));
+        store.dispatch(vada.setRoute.request(loading.apply({num: 3})));
 
         expect(store.getState().route).to.not.equal(null);
         expect(store.getState().route.name).to.equal(loading.id);

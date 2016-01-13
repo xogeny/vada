@@ -45,7 +45,7 @@ import redux = require('redux');
 // Reactor is just a type to describe a function that will potentially
 // dispatch actions on a Reducer<T> based on the current value of
 // the state of that reducer.
-export type InlineReactor<T> = (next: T, prev: T) => T;
+export type InlineReactor<T> = (prev: T, next: T) => T;
 
 function wrapInline<T>(reducer: redux.Reducer<T>, reactor: InlineReactor<T>)
 : redux.Reducer<T> {
@@ -58,7 +58,7 @@ function wrapInline<T>(reducer: redux.Reducer<T>, reactor: InlineReactor<T>)
 
         // Now, pass the reactor the current and previous state and
         // return what it returns
-        let final = reactor(next, prev);
+        let final = reactor(prev, next);
 
         return final;
     }

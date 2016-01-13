@@ -92,7 +92,7 @@ export function onEnter<S,P>(route: RouteId<P>,
                              pull: (s: S) => RouteState,
                              trans: (s: S, p: P) => S)
 : InlineReactor<S> {
-    return (next: S, prev: S): S => {
+    return (prev: S, next: S): S => {
         if (prev===null || prev===undefined) return next;
         if (next===null || next===undefined) return next;
         let prevRoute = pull(prev);
@@ -122,7 +122,7 @@ export function onExit<S,P>(route: RouteId<P>,
                             pull: (s: S) => RouteState,
                             trans: (s: S, p: P) => S)
 : InlineReactor<S> {
-    return (next: S, prev: S): S => {
+    return (prev: S, next: S): S => {
         if (prev===null || prev===undefined) return next;
         if (next===null || next===undefined) return next;
         let prevRoute = pull(prev);
