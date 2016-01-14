@@ -20,10 +20,11 @@ let initialState: RootState = {
 describe("Test reactors", () => {
     let main = new vada.RouteId<{num: number}>("main");
     let loading = new vada.RouteId<{num: number}>("loading");
+    let routeReducer = vada.routeReducer(null);
     let rootReducer: redux.Reducer<RootState> =
         (s: RootState = initialState, action: redux.Action) => {
             return {
-                route: vada.routeReducer(s.route, action),
+                route: routeReducer(s.route, action),
                 enteredMain: s.enteredMain,
                 exitedMain: s.exitedMain,
             }

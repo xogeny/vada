@@ -48,12 +48,9 @@ export function routingCallback<T>(store: redux.Store<T>,
     });
 };
 
-export const initialRouteState = {
-    name: "",
-    params: {}
+export function routeReducer(initialRouteState: RouteState) {
+    return OpReducer([setRoute], initialRouteState);
 }
-
-export const routeReducer = OpReducer(initialRouteState, [setRoute]);
 
 function equalParams(a: {}, b: {}): Boolean {
     if (a===b) return true;

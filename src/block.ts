@@ -1,3 +1,4 @@
+import _ = require('lodash');
 import redux = require('redux');
 
 import { memo2 } from './memo';
@@ -25,15 +26,26 @@ export class BlockStore<S, T, D> implements redux.Store<T> {
     // initialization
     protected reducer: redux.Reducer<T>;
 
+    // Computed values
+    protected computed: D;
+
     protected wrap(r: redux.Reducer<T>) {
-        return r;
+        return (s: T, a: redux.Action) => {
+            let ret = r(s, a);
+            if (this.dep) {
+                this.computed = this.dep(ret, this.staticData);
+            } else {
+                this.computed = null;
+            }
+            return ret;
+        }
     }
     
     // We build an instance of BlockStore using the static data to be
     // associated with the store and a reducer function (which we will
     // wrap to provide synchronous updates of computed properties).
-    constructor(protected staticData: S, unwrapped: redux.Reducer<T>,
-                protected state0: T) {
+    constructor(unwrapped: redux.Reducer<T>, protected state0: T,
+                protected staticData: S, protected dep?: (t: T, s: S) => D) {
         this.reducer = this.wrap(unwrapped);
         this.store = redux.createStore(this.reducer, state0);
     }
@@ -58,10 +70,40 @@ export class BlockStore<S, T, D> implements redux.Store<T> {
         return {id: 0};
     }
     getStatic(): S { return this.staticData; }
+    getComputed(): D { return this.computed; }
     compute<R>(f: (state: T, statics?: S) => R): () => R {
         let fm = memo2(f);
         return () => {
             return fm(this.getState(), this.getStatic());
         }
+    }
+}
+
+export interface BlockData<S, T, C> {
+    static: S;
+    state: T;
+    computed: C;
+}
+
+export function blockReducer<T,S,C>(reducer: redux.Reducer<T>,
+                                    s: S, c: (t: T, s: S) => C)
+: redux.Reducer<BlockData<S,T,C>> {
+    return (b: BlockData<S,T,C>, action: redux.Action) => {
+        let state = reducer(b.state, action);
+        return {
+            static: b.static,
+            state: state,
+            computed: c(state, b.static),
+        };
+    }
+}
+
+export function appendComputed<T extends {}, C extends {}>(r: redux.Reducer<T>,
+                                                           f: (s: T) => C)
+: redux.Reducer<T&C> {
+    return (state: T&C, action: redux.Action) => {
+        let newstate = r(state, action);
+        let ret = _.assign({}, newstate, f(newstate));
+        return ret as T&C;
     }
 }

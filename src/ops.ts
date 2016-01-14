@@ -80,7 +80,8 @@ export function SubOp<T, S, P>(name: string,
 
 export type Operations<T> = Array<Operation<T, any>>;
 
-export function OpReducer<T>(state0: T, evals: Operations<T>): redux.Reducer<T> {
+// TODO: Reverse order, make initial state optional
+export function OpReducer<T>(evals: Operations<T>, state0?: T): redux.Reducer<T> {
     'use strict';
     // This checks to make sure there are no duplicate operations
     for(let i=0;i<evals.length;i++) {
@@ -107,7 +108,7 @@ export function OpReducer<T>(state0: T, evals: Operations<T>): redux.Reducer<T> 
     };
 }
 
-export function OpStore<T>(state0: T, evals: Operations<T>): redux.Store<T> {
+export function OpStore<T>(evals: Operations<T>, state0?: T): redux.Store<T> {
     'use strict';
-    return redux.createStore(OpReducer(state0, evals));
+    return redux.createStore(OpReducer(evals, state0));
 }
