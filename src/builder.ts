@@ -1,11 +1,11 @@
 import redux = require('redux');
-import { Operation, OpReducer } from './ops';
+import { Operation, createOpReducer } from './ops';
 import { InlineReactor, wrapReducer } from './reactors';
 
 export class Builder<T extends {}> {
     protected red: redux.Reducer<T>;
     constructor(ops: Operation<T, any>[], protected s0?: T) {
-        this.red = OpReducer(ops, s0);
+        this.red = createOpReducer(ops, s0);
     }
     protected newBuilder(r: redux.Reducer<T>): Builder<T> {
         let ret = new Builder<T>([]);
@@ -16,7 +16,7 @@ export class Builder<T extends {}> {
                ops: Operation<A, any>[], a0?: A)
     : Builder<T> {
         let ret = new Builder<T>([]);
-        let cred = OpReducer(ops, a0)
+        let cred = createOpReducer(ops, a0)
         ret.red = (s: T = this.s0, a: redux.Action) => {
             let base = this.red(s, a);
             if (base==undefined || base==null) {

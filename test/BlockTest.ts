@@ -29,7 +29,7 @@ const incY = vada.DefOp("incY", (s: TestState, p: void) => {
 })
 
 const initialState = {x: 1, y: 1};
-const reducer = vada.OpReducer([incX, incY], initialState);
+const reducer = vada.createOpReducer([incX, incY], initialState);
 
 describe("Test Block Store", () => {
     let s0 = {

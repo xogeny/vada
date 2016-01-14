@@ -58,8 +58,8 @@ describe("Test eval actions", () => {
 	    cows: 14
 	};
 
-        var bred = vada.OpReducer([beer], b0)
-        var mred = vada.OpReducer([milk], m0)
+        var bred = vada.createOpReducer([beer], b0)
+        var mred = vada.createOpReducer([milk], m0)
         var store = redux.createStore(CombinedReducer(bred, mred))
 
 	store.dispatch(beer.request(null));

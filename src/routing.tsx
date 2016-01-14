@@ -1,6 +1,6 @@
 import redux = require('redux');
 
-import { DefOp, OpReducer, Operation } from './ops';
+import { DefOp, createOpReducer, Operation } from './ops';
 import { SimpleStore } from './store';
 import { InlineReactor } from './reactors';
 
@@ -49,7 +49,7 @@ export function routingCallback<T>(store: redux.Store<T>,
 };
 
 export function routeReducer(initialRouteState: RouteState) {
-    return OpReducer([setRoute], initialRouteState);
+    return createOpReducer([setRoute], initialRouteState);
 }
 
 function equalParams(a: {}, b: {}): Boolean {
