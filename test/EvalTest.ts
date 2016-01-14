@@ -97,8 +97,8 @@ describe("Test builder", () => {
         };
 
         var red = new vada.Builder([], s0)
-            .overlay((s, r, a) => { s.bottles = r(s.bottles, a); }, [beer])
-            .overlay((s, r, a) => { s.maids = r(s.maids, a); }, [milk]);
+            .overlayOps((s, r, a) => { s.bottles = r(s.bottles, a); }, [beer])
+            .overlayOps((s, r, a) => { s.maids = r(s.maids, a); }, [milk]);
         var store = redux.createStore(red.reducer());
 
 	store.dispatch(beer.request(null));

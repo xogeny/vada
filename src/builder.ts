@@ -14,15 +14,14 @@ export class Builder<T extends {}> {
         ret.s0 = s0;
         return ret;
     }
-    overlay<A>(f: (s: T, r: redux.Reducer<A>, a: redux.Action) => void,
-               ops: Operation<A, any>[] | redux.Reducer<A>, a0?: A)
+    overlayOps<A>(f: (s: T, r: redux.Reducer<A>, a: redux.Action) => void,
+               ops: Operation<A, any>[], a0?: A)
     : Builder<T> {
-        let cred: redux.Reducer<A> = null;
-        if (_.isArray(ops)) {
-            cred = createOpReducer(ops, a0)
-        } else {
-            cred = ops as redux.Reducer<A>;
-        }
+        return this.overlay(f, createOpReducer(ops, a0), a0);
+    }
+    overlay<A>(f: (s: T, r: redux.Reducer<A>, a: redux.Action) => void,
+               cred: redux.Reducer<A>, a0?: A)
+    : Builder<T> {
         return this.newBuilder((s: T = this.s0, a: redux.Action) => {
             let base = this.red(s, a);
             if (base==undefined || base==null) {
