@@ -13,3 +13,5 @@ export * from './actions';
 export * from './memo';
 
 export * from './reducers';
+
+export * from './block';

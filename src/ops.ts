@@ -2,6 +2,7 @@ import redux = require('redux');
 import uuid = require('node-uuid');
 
 export interface OpMeta {
+    prefix: string;
 }
 
 export interface OpAction<P> extends redux.Action {
@@ -19,6 +20,8 @@ export type Evaluator<T, P> = (s: T, payload: P) => T;
 export interface Operation<T, P> {
     // A unique identifier for this particular operation
     type: string;
+    // Meta information about this operation
+    meta: OpMeta;
     // An action creator (takes a payload, returns an action)
     request: OpActionCreator<P>;
     // Method that performs that actual state transformation
@@ -34,20 +37,23 @@ export interface Operation<T, P> {
 // the transformation) of type P.  This generates an Operation<T, P> which
 // consists of both an Action Creator (request) and the a tranformation
 // code (evaluate).
-export function DefOp<T, P>(type: string, evaluate: Evaluator<T, P>)
+export function DefOp<T, P>(prefix: string, evaluate: Evaluator<T, P>)
 : Operation<T, P> {
     'use strict';
-    let id: string = type+"-"+uuid.v4();
+    let id: string = prefix+"-"+uuid.v4();
+    let meta: OpMeta = {
+        prefix: prefix,
+    }
     return {
         "type": id,
         "request": (p: P): OpAction<P> => {
             return {
                 "type": id,
                 "payload": p,
-                "meta": {
-                }
+                "meta": meta,
             };
         },
+        "meta": meta,
         "evaluate": evaluate,
         "instance": (a: OpAction<any>) => {
             return a.type===id;
@@ -76,6 +82,20 @@ export type Operations<T> = Array<Operation<T, any>>;
 
 export function OpReducer<T>(state0: T, evals: Operations<T>): redux.Reducer<T> {
     'use strict';
+    // This checks to make sure there are no duplicate operations
+    for(let i=0;i<evals.length;i++) {
+        for(let j=i+1;j<evals.length;j++) {
+            if (evals[i]===evals[j]) {
+                throw new Error("OpReducer created with duplicate Operations");
+            }
+            if (evals[i].meta.prefix==evals[j].meta.prefix) {
+                console.warn("You created two Operations with the same name, "+
+                             "you probably didn't want to do that.");
+                console.warn("Your code will work, "+
+                             "but debugging could get confusing");
+            }
+        }
+    }
     return (state: T = state0, action: OpAction<any>) => {
         if (!action) return state;
         evals.forEach((info: Operation<T, any>) => {
