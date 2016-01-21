@@ -10,13 +10,16 @@ export type ParamMap = { [key: string]: any };
 // route and to be used to signal that type information when an instance
 // of this type is passed into and out of other functions.
 export class RouteId<P extends ParamMap> {
-    constructor(public id: string) {
+    constructor(public id: string, protected parent?: RouteId<any>) {
     }
     public apply(p: P): RouteState {
         return {
             name: this.id,
             params: p,
         };
+    }
+    public nested<X extends ParamMap>(sub: string): RouteId<P & X> {
+        return new RouteId<P & X>(this.id+"."+sub, this);
     }
 }
 

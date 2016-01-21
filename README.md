@@ -12,7 +12,19 @@ You can install this module using `npm` with:
 npm install vada
 ```
 
-## Introduction
+## User's Guide
+
+### Routing
+
+To create routes (or more specifically, `RouteId` instances), just
+declare them as follows:
+
+```
+export const main = new vada.RouteId<{}>("main");
+export const search = new vada.RouteId<{term: string}>("search");
+```
+
+## Background
 
 While both migrating existing applications and creating new ones,
 incorporating `redux` and `react` into my applications has pushed me
@@ -37,7 +49,7 @@ This repository implements several patterns that I found useful in
 trying to achieve these goals.  There are three main pieces of
 functionality that this library provides...
 
-## Routing
+### Routing
 
 The first challenge I ran into was how to provide routing *without
 involving a view*.  Libraries like
@@ -66,7 +78,7 @@ It should be noted that if you are working with TypeScript, these
 implementations also provide some type constraints that help to ensure
 that route parameters can be statically checked at compile time.
 
-## Reactors
+### Reactors
 
 In trying to improve application testing, I wanted to see how far I
 could push logic out of my view.  My goal was to be able to go back to
@@ -76,8 +88,8 @@ traverse my UI.  I find the UI design is too fluid to build testing
 on.  But the underlying application structure can be relatively
 invariant.
 
-The obstacle here is that it is so [common and relatively
-convenient](https://medium.com/@learnreact/container-components-c0e67432e005)
+The obstacle here is that it is so
+[common and relatively convenient](https://medium.com/@learnreact/container-components-c0e67432e005)
 to embed logic in a view.  But I think this is actually unwise for
 many reasons.  Not only does it mix view and application logic in such
 a way that the view must become part of the testing.  It also makes it
@@ -85,8 +97,8 @@ difficult to modularize the application.
 
 So I wanted to get the application logic out of my view.  But the
 question was...where to put it?  What form should this logic take and
-how can I incorporate it into applications?  I was inspired by [this
-article](http://jamesknelson.com/join-the-dark-side-of-the-flux-responding-to-actions-with-actors/)
+how can I incorporate it into applications?  I was inspired by
+[this article](http://jamesknelson.com/join-the-dark-side-of-the-flux-responding-to-actions-with-actors/)
 on Actors.  But I found the implementation to be problematic.  So I
 came up with a similar approach that I called `reactors`.  The `re`
 prefix applies on several levels.  First, this pattern provides a way
@@ -96,7 +108,7 @@ rather with the *reducer*.  Finally, I find that it really helps keep
 the actions simple and *reusable* while providing a way to extend the
 application with additional functionality.
 
-## Operations
+### Operations
 
 I think `redux` is a great way to incorporate state monads into
 Javascript applications.  I think @gaeron has done a great job of
@@ -115,7 +127,7 @@ generating unique action names so as to avoid action naming conflicts.
 Finally, if you are working with TypeScript, of providing some nice
 type constraints for type checking action payloads.
 
-## Additional Functionality
+### Additional Functionality
 
 This module represents the core functionality for creating an
 application where logic is decoupled from the view.  As such, to
