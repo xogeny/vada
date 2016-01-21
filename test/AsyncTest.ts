@@ -14,7 +14,7 @@ describe("Test Async actions and reducers", () => {
         expect(store.getState().error).to.equal(null);
 
         store.dispatch(actions.start.request(null));
-        expect(store.getState().status).to.equal(vada.Status.Requested);
+        expect(store.getState().status).to.equal(vada.Status.Started);
         expect(store.getState().value).to.equal(null);
         expect(store.getState().error).to.equal(null);
 

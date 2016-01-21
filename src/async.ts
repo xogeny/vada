@@ -1,7 +1,7 @@
 import redux = require('redux');
 import { DefOp, Operation, createOpReducer } from './ops';
 
-export enum Status { Created, Requested, Resolved, Failed };
+export enum Status { Created, Started, Resolved, Failed };
 
 export interface AsyncState<T> {
     status: Status;
@@ -9,10 +9,20 @@ export interface AsyncState<T> {
     error: string;
 };
 
-export const initialState: AsyncState<any> = {
-    status: Status.Created,
-    value: null,
-    error: null,
+export function initialAsyncState<T>(): AsyncState<T> {
+    return {
+        status: Status.Created,
+        value: null,
+        error: null,
+    };
+}
+
+export function startAsync<T>(): AsyncState<T> {
+    return {
+        status: Status.Started,
+        value: null,
+        error: null,
+    };
 }
 
 export interface AsyncActions<T> {
@@ -40,7 +50,7 @@ export function asyncActions<T>(prefix: string): AsyncActions<T> {
     return {
         start: DefOp<AsyncState<T>,void>("start-"+prefix, (s, p) => {
             return {
-                status: Status.Requested,
+                status: Status.Started,
                 value: s.value,
                 error: s.error,
             };
