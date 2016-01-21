@@ -26,3 +26,9 @@ export function overlay<T extends {}>(obj: T, f: (t: T) => void):T {
     // Return mutated copy
     return c;
 }
+
+// This function avoids cloning unless the condition is met
+export function overlayIf<T extends {}>(obj: T, p: boolean, f: (t: T) => void): T {
+    if (!p) return obj;
+    return overlay(obj, f);
+}

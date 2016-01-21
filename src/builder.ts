@@ -2,6 +2,7 @@ import _ = require('lodash');
 import redux = require('redux');
 import { Operation, createOpReducer } from './ops';
 import { InlineReactor, wrapReducer } from './reactors';
+import { overlay } from './clone';
 
 export class Builder<T extends {}> {
     protected red: redux.Reducer<T>;
@@ -28,13 +29,7 @@ export class Builder<T extends {}> {
                 throw new Error("Tried to overlay nested reducer "+
                                 "onto undefined parent");
             }
-            // If the nested reducer didn't do anything, we need to make
-            // sure we make a copy so that we don't mutate s.
-            if (base===s) {
-                base = _.clone(base);
-            }
-            f(base, cred, a);
-            return base;
+            return overlay(base, s => f(s, cred, a));
         }, this.s0);
     }
     reactTo(...reactors: InlineReactor<T>[]) {
