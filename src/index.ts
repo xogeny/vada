@@ -19,3 +19,5 @@ export * from './block';
 export * from './builder';
 
 export * from './async';
+
+export * from './clone';

@@ -49,7 +49,7 @@ export const setPath = <T>(path: Path, v: T): SetAction => {
 // that a) it allows more fields to be set and b) it provides
 // greater type safety.
 export const UPDEEP_OVERLAY: string = 'UPDEEP_OVERLAY';
-export const overlay = <T>(partial: T): FSA<T, void> => {
+export const updeepOverlay = <T>(partial: T): FSA<T, void> => {
     return {
         "type": UPDEEP_OVERLAY,
         "payload": partial,
