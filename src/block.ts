@@ -14,7 +14,7 @@ export interface ComputedProperty<T> {
 // additional information above and beyond the store.  It includes the
 // normal getState method, but it also includes a getStatic and
 // getComputed method.  The getStatic method allows static (not
-// changing over time) informatio to be associated with the store.  It
+// changing over time) information to be associated with the store.  It
 // also provides a getComputed method that computed dependent
 // properties based on static and state information.
 export class BlockStore<S, T, D> implements redux.Store<T> {
