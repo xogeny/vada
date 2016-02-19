@@ -23,8 +23,19 @@ export function overlay<T extends {}>(obj: T, f: (t: T) => void):T {
     // Call a function that may (or may not) mutate it
     f(c);
 
-    // Return mutated copy
-    return c;
+    // If we find that a key has been changed, we return the clone.
+    // This means we only return a different value if we absolutely
+    // need to.
+    for(let k in obj) {
+        if (obj.hasOwnProperty(k)) {
+            if (c[k]!==obj[k]) {
+                return c;
+            }
+        }
+    }
+
+    // If no changes were found, return the original object
+    return obj;
 }
 
 // This function avoids cloning unless the condition is met
