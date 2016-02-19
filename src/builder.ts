@@ -15,6 +15,11 @@ export class Builder<T extends {}> {
         ret.s0 = s0;
         return ret;
     }
+    reduce(f: (t: T) => T) {
+        return this.newBuilder((s: T = this.s0, a: redux.Action) => {
+            return f(this.red(s,a));
+        }, this.s0);
+    }
     overlayOps<A>(f: (s: T, r: redux.Reducer<A>, a: redux.Action) => void,
                ops: Operation<A, any>[], a0?: A)
     : Builder<T> {
