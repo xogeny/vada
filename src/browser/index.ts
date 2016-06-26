@@ -70,8 +70,8 @@ export function initializeRouting(callback: RoutingCallback) {
     })
 
     crossroads.bypassed.add(function(request: string){
-	console.log("Bypassed: ", request);
-	callback(null, {});
+	    console.log("Bypassed: ", request);
+	    callback(null, {});
     });
 
     var parseHash = (newHash: string, oldHash: string) => {
@@ -79,9 +79,9 @@ export function initializeRouting(callback: RoutingCallback) {
     }
 
     if (hasher!=null) {
-	hasher.initialized.add(parseHash); //parse initial hash
-	hasher.changed.add(parseHash); //parse hash changes
-    
-	hasher.init(); //start listening for history change
+	    hasher.initialized.add(parseHash); //parse initial hash
+	    hasher.changed.add(parseHash); //parse hash changes
+
+	    hasher.init(); //start listening for history change
     }
 }

@@ -32,8 +32,8 @@ export interface RouteState {
 // Actions
 export const setRoute = DefOp("Route/SET_ROUTE", (r: RouteState, p: RouteState) => {
     return {
-	name: p.name,
-	params: p.params
+	    name: p.name,
+	    params: p.params
     }
 })
 
@@ -46,7 +46,8 @@ export function routingCallback<T>(store: redux.Store<T>,
         if (name===null && bypass!==undefined) {
             bypass();
         } else {
-            store.dispatch(setRoute.request({name: name, params: params}));
+            let obj = {name: name, params: params}
+            store.dispatch(setRoute.request(obj));
         }
     });
 };

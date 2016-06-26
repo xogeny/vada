@@ -40,5 +40,16 @@ export class Builder<T extends {}> {
     reactTo(...reactors: InlineReactor<T>[]) {
         return this.newBuilder(wrapReducer(this.red, reactors), this.s0);
     }
+    log(desc: string): Builder<T> {
+        return this.newBuilder((s: T = this.s0, a: redux.Action) => {
+            let si = s;
+            console.log(desc);
+            console.log("  initial state:", si)
+            console.log("  action: ", a)
+            let sf = this.red(s,a);
+            console.log("  final state:", sf)
+            return sf;
+        }, this.s0);
+    }
     reducer(): redux.Reducer<T> { return this.red; }
 };
