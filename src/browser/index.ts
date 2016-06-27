@@ -19,7 +19,7 @@ function paramObj(route: CrossroadsJs.RouteData): { [key: string]: any } {
 export type RoutingCallback = (name: string, params: {}) => void
 
 export class RouteRequest<T> {
-    constructor(public route: RouteId<T>) {}
+    constructor(public route: RouteId<T>) { }
     goto(params: T) {
         gotoRoute(this.route, params);
     }
@@ -30,16 +30,15 @@ export class RouteRequest<T> {
 
 export function bindRoutes(routes: RouteList) {
     for (var name in routes) {
-	bindRoute(name, routes[name]);
+        bindRoute(name, routes[name]);
     }
 }
 
-export function bindRoute<T>(route: RouteId<T>, pattern: string): RouteRequest<T> {
+export function bindRoute<T>(routeName: string, pattern: string): RouteRequest<T> {
     let routeData = crossroads.addRoute(pattern);
-    let name = route.id;
     routeMap[name] = routeData;
     reverseMap[pattern] = name;
-    return new RouteRequest<T>(route);
+    return new RouteRequest<T>(new RouteId<{}>(routeName));
 }
 
 // Within a browser, the way we dispatch a route is by simply
@@ -69,19 +68,19 @@ export function initializeRouting(callback: RoutingCallback) {
         callback(name, paramObj(data))
     })
 
-    crossroads.bypassed.add(function(request: string){
-	    console.log("Bypassed: ", request);
-	    callback(null, {});
+    crossroads.bypassed.add(function (request: string) {
+        console.log("Bypassed: ", request);
+        callback(null, {});
     });
 
     var parseHash = (newHash: string, oldHash: string) => {
         crossroads.parse(newHash);
     }
 
-    if (hasher!=null) {
-	    hasher.initialized.add(parseHash); //parse initial hash
-	    hasher.changed.add(parseHash); //parse hash changes
+    if (hasher != null) {
+        hasher.initialized.add(parseHash); //parse initial hash
+        hasher.changed.add(parseHash); //parse hash changes
 
-	    hasher.init(); //start listening for history change
+        hasher.init(); //start listening for history change
     }
 }
