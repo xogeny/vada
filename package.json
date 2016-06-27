@@ -27,9 +27,10 @@
   "dependencies": {
     "crossroads": "^0.12.2",
     "lodash": "^3.10.1",
-    "node-uuid": "^1.4.7",
-    "redux": "^3.0.4",
-    "updeep": "^0.11.0"
+    "react": "^15.1.0",
+    "redux": "^3.5.2",
+    "updeep": "^0.11.0",
+    "uuid": "^2.0.2"
   },
   "devDependencies": {
     "chai": "^3.4.1",

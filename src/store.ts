@@ -7,15 +7,15 @@ export type WrapperFunction<S> = (store: redux.Store<S>) => redux.Store<S>;
 // specific operations can then be selectively overridden
 // post-wrapping (e.g., to log actions, states, etc)
 export function wrapStore<S>(store: redux.Store<S>): redux.Store<S> {
-    return {
-        getReducer: () => store.getReducer(),
-	replaceReducer: (n: redux.Reducer<S>) => store.replaceReducer(n),
-	dispatch: <A extends redux.Action>(action: A) => {
+    let ret: redux.Store<S> = {
+        replaceReducer: (n: redux.Reducer<S>) => store.replaceReducer(n),
+        dispatch: <A extends redux.Action>(action: A) => {
             return store.dispatch(action)
-	},
-	getState: () => store.getState(),
-	subscribe: (listener: () => void) => store.subscribe(listener)
+        },
+        getState: () => store.getState(),
+        subscribe: (listener: () => void) => store.subscribe(listener)
     }
+    return ret;
 }
 
 // This is just a subset of the normal Store interface that doesn't
