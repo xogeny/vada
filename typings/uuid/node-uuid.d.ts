@@ -1,5 +1,5 @@
-// Type definitions for node-uuid.js
-// Project: https://github.com/broofa/node-uuid
+// Type definitions for uuid.js
+// Project: https://github.com/defunctzombie/node-uuid
 // Definitions by: Jeff May <https://github.com/jeffmay>
 // Definitions: https://github.com/borisyankov/DefinitelyTyped
 

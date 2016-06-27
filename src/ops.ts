@@ -1,5 +1,5 @@
 import redux = require('redux');
-import uuid = require('node-uuid');
+import uuid = require('uuid');
 
 export interface OpMeta {
     prefix: string;
